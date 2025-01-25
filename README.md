@@ -1,5 +1,95 @@
 # Loan Default Prediction
 
+<h1 align="center">
+  <img src="./figs/money.jpeg" width = 600 alt="Openspark logo">
+  <br>
+</h1>
+
+### Table of Contents  
+
+[Resumen](#Resumen) <br>
+[EDA](#EDA) <br>
+[Setup](#setup) <br>
+[Examples](#examples) <br>
+[Trabajo_futuro](#Trabajo_futuro) <br>
+
+<a names= "Resumen"></a>
+
+## Resumen
+
+En este proyecto se implemetó modelo de regresión logística entrenado para la detección de incumplimiento de un préstamo, siendo este un problema de clasificación binaria. 
+Además de los parámetros del modelo, se tienen organizados y distribuidos los recursos para el análisis exploratorio (EDA), preprocesamiento, entrenamiento y 
+
+---
+<span style="color:red"> *NOTE* </span>
+Nota
+---
+
+<a names= "EDA"></a>
+
+## Análisis explotario de datos (EDA)
+
+Principales hallazgos
+
+- Es un problema binario con clases desbalanceadas (17% de clientes han fallado en los pagos)
+- Existen registros con más del 90% de valores nulos
+- Las variables tienen alta varianza
+- Existen familias de variables con varios tipos principales, algunas con métricas agregadas (min, max, mean, no agg). De estas familias se encuentra que la mayor es la relacionada al nombre "activity_pattern" con 104 variables similares.
+- Aproximadamente la mitad de las variables presentan un porcentaje mayor al 20% de valores nulos
+- Hay una alta incidencia de correlación entre las variables de las mismas familias. Donde para las variables con menos del 20% de valores nulos se tienen las siguientes incidencias entre variables con los mismos nombres base. 
+
+```python
+{'mobility_pattern_work_': 5,
+ 'activity_pattern_': 249,
+ 'device_inferred_price_': 1,
+ 'social_mean_degree_last_': 3,
+ 'entropy_contacts_weekend_last_': 1}
+```
+<a names= "features"></a>
+
+## Main features
+
+<ul>
+<li> Validate databricks inputs </li>
+<li> Transform tables and dataframes </li>
+<li> Download and upload data from/to external sources as MongoDB, Mysql, AWS and Elastic search</li>
+<li> Automate data persistence within databricks (performs CRUD operations)</li>
+</ul>
+
+<a names= "setup"></a>
+
+## Setup
+
+### Python
+
+Install the latest Openspark version with:
+!!! It is not available yet!!!
+
+sh
+pip install -i https://test.pypi.org/simple/ Openspark
+
+
+[//]: <> (This is also a comment.)
+
+<a names= "overview"></a>
+
+## Examples
+
+### Module
+
+python
+>>> # Verify if date is in the specified format
+>>> validate_date("2024-01-01", format_ = "%Y-%m-%d")
+"Valid date"
+True
+
+
+<p align="center">
+  <b>Documentation (Pending)</b>:
+  <a href="">Python</a>
+</p>
+
+
 
 [![PyPI version](https://img.shields.io/pypi/v/openai.svg)](https://pypi.org/project/openai/)
 
