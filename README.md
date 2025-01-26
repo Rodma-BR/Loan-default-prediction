@@ -8,9 +8,10 @@
 ### Table of Contents  
 
 [Resumen](#Resumen) <br>
-[EDA](#EDA) <br>
-[Setup](#setup) <br>
-[Examples](#examples) <br>
+[Análisis](#EDA) <br>
+[Preprocesamiento](#Preprocesamiento) <br>
+[Modelación](#Modelación) <br>
+[Resultados](#Resultados) <br>
 [Trabajo_futuro](#Trabajo_futuro) <br>
 
 <a names= "Resumen"></a>
