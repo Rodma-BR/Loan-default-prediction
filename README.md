@@ -42,9 +42,21 @@ También se revisan estadísticos sobre las variables, distribución de los dato
 
 ---
 
-A continuación se describen los principales hallazgos encontrados en el análisis exploratorio
+A continuación se describen los principales hallazgos encontrados en el análisis exploratorio, estos se resumen en la siguiente lista y se describen posteriormente.
 
-*Insights*
+<ul>
+<li> Clases: </li> 
+<li> Registros nulos: </li>
+<li> Familias de variables: </li> 
+<li> Variables seudocontinuas </li>
+<li>  Correlación </li>
+<li> Outliers </li>
+<li> Distribución </li>
+<li> Regiones </li> 
+<li> Distribución de incumplimiento </li>
+</ul>
+
+**Insights**
 
 <ul>
 <li> <b>Clases: </b></li> Es un problema binario con clases desbalanceadas, la proporción es como sigue
@@ -66,7 +78,7 @@ A continuación se describen los principales hallazgos encontrados en el anális
   <img src="./figs/completeness.png" width = 600>
   <br>
 </h1>
-<li> <b> Correlación </b> </li>Hay una alta incidencia de correlación entre las variables de las mismas familias. Donde para las variables con menos del 20% de valores nulos se tienen las siguientes incidencias entre variables con los mismos nombres base. 
+<li> <b> Correlación </b> </li> Hay una alta incidencia de correlación entre las variables de las mismas familias. Donde para las variables con menos del 20% de valores nulos se tienen las siguientes incidencias entre variables con los mismos nombres base. 
 
 ```python
 {'mobility_pattern_work_': 5,
@@ -104,6 +116,12 @@ A continuación se describen los principales hallazgos encontrados en el anális
 |5|0.129139|
 |9|0.130252|
 
+<li> <b> Distribución de incumplimiento </b> </li> El incumplimiento no se distribuye uniformemente sobre el tiempo, siendo particularmente notorio en el último mes del conjunto etiquetado.
+
+<h1 align="center">
+  <img src="./figs/default_time_series.png" width = 600 alt = "default_ts">
+  <br>
+</h1>
 </ul>
 
 <a names= "Preprocesamiento"></a>
@@ -112,14 +130,54 @@ A continuación se describen los principales hallazgos encontrados en el anális
 
 El preprocesamiento se dividió en 3 secciones con una condición inicial sobre los datos, dicha condición consiste en tratar por separado (trabajo a futuro) los registros con alta nulicidad. Por lo que una cantidad de registros baja se separó para su propio estudio posterior.
 
-Las secciones en orden de implementación son "separación de conjuntos", "selección de variables" y "transformaciones". A continuación se detalla el procedimiento.
+Las secciones en orden de implementación son,
 
 <ul>
-<li> Validate databricks inputs </li>
-<li> Transform tables and dataframes </li>
-<li> Download and upload data from/to external sources as MongoDB, Mysql, AWS and Elastic search</li>
-<li> Automate data persistence within databricks (performs CRUD operations)</li>
+<li> Separación de conjuntos </li>
+<li> Selección de variables </li>
+<li> Transformaciones</li>
 </ul>
+
+A continuación se detalla el procedimiento,
+
+<ul>
+<li> <b> Separación de conjuntos: </b> </li> El conjunto de entrenamiento y validación se separó considerando la dependencia temporal de las predicciones sobre el conjunto de prueba (muestras sin etiqueta). Considerando esta necesidad, se separaron 10 meses para el conjunto de entrenamiento y 4 meses para el conjunto de validación. 
+
+La distribución de incumplimiento para ambos conjuntos es similar
+
+**Conjunto de entrenamiento**
+
+|default| Proporción de la clase|
+|--|--|
+|0| 0.839722 |
+|1|0.160278 |
+
+
+**Conjunto de validación**
+
+|default| Proporción de la clase|
+|--|--|
+|0| 0.80965  |
+|1|0.19035 |
+
+La distribución del total de registros entre conjuntos es aproximadamente del 70%-30% para entrenamiento y validación respectivamente.
+
+<li> <b> Selección de variables: </b> </li> Se realizaron procedimientos para la exclusión de variables según las siguientes condiciones.
+<ul> 
+<li> Variables no deseadas: </li> Se excluyeron varias que no son deseadas desde el inicio del estudio como el id del registro o la fecha en la que se registró el crédito, esta última para evitar la dependecia del modelo respecto al tiempo.
+<li> Variables quasi-constantes: </li> Las variables con baja varianza, generalmente, tienen poco impacto en la implementación de los modelos ML.
+<li> Variables con alto porcentaje de valores nulos: </li> Se retiraron las variables que presentaban una proporción mayor al 20% de valores nulos, considerando que restaban más de la mitad de las variables haciendo dicha exclusión.
+<li> Variables correlacionadas: </li> Se excluyeron las variables con una correlación mayor al 0.8 según el método clásico de Pearson. Si hay correlación en una relación uno a muchos se retiene la primer variable encontrada. Más información del método se puede consultar el la documentación de <a href = "https://feature-engine.trainindata.com/en/latest/index.html">Feature engine</a>.
+</ul>
+<li> <b> Creación de variables: </b> </li> Este procedimiento no se realizó en este estudio por falta de definición de las variables.
+<li><b>  Transformaciones: </b> </li> Se realizaron 2 transformaciones principales.
+<ul> 
+<li> One hot encoder: </li> La variable de regiones se transformó utilizando OneHotEncoder por si el modelo selecciona alguna de estas regiones siguiendo el algoritmo RFE (Se revisa en la implementación)
+<li> Imputación: </li> Se imputaron los valores faltantes para las variables seleccionadas siguiendo el algoritmo de KNN, la razón principal fue la no continuidad de los valores de las variables y la presencia de aglomeraciones de datos.
+</ul>
+</ul>
+
+Finalmente se preservan los conjuntos de datos limpios para la posterior implementación del modelo.
 
 <a names= "Modelación"></a>
 
@@ -132,6 +190,6 @@ Las secciones en orden de implementación son "separación de conjuntos", "selec
 
 ## Resultados
 
-
+Mejora a la selección de variables correlacionadas
 
 
