@@ -3,7 +3,10 @@ import re
 
 # Data manipulation
 import polars as pl
+import pandas as pd
 
+# Transformers
+from sklearn.base import BaseEstimator, TransformerMixin
 
 # Regex helper functions
 def get_similar_variables(df_: pl.DataFrame, kword_:str)-> list:
@@ -95,3 +98,100 @@ def count_similar_vars(df_, pattern_ = "([a-z\_]+)(_[\d]+)"):
             base_name_counter[base_name] = 1
 
     return base_name_counter
+
+class Mode_imputer(BaseEstimator, TransformerMixin):
+    """
+    Fill null values with most frequent value
+
+    Parameters:
+    -----------
+
+        df_: pd.DataFrame
+            Target pandas dataframe
+
+        column_name_: str
+            Feature name to be transformed
+
+    Returns:
+    -------
+
+        Return Dataframe with imputed values
+
+    """
+
+    def __init__(self, column_name):
+        self.column_name = column_name
+
+    def fit(self, X, y=None):
+        return self  # The fit method typically does nothing for transformers
+    
+    def transform(self, X):
+        X_transformed = X.copy()  # Copy the input DataFrame to avoid modifying the original
+
+        X_transformed[self.column_name] = X_transformed[self.column_name].fillna(X_transformed[self.column_name].mode()[0])
+        return X_transformed
+
+
+class Transformer_Date(BaseEstimator, TransformerMixin):
+    """
+    Transform a dataframe feature dtype
+
+    Parameters:
+    -----------
+
+        df_: pd.DataFrame
+            Target pandas dataframe
+
+        column_name_: str
+            Feature name to be transformed
+
+    Returns:
+    -------
+
+        Return Dataframe having transformed features to datetime
+
+    """
+
+    def __init__(self, column_name):
+        self.column_name = column_name
+
+    def fit(self, X, y=None):
+        return self  # The fit method typically does nothing for transformers
+    
+    def transform(self, X):
+        X_transformed = X.copy()  # Copy the input DataFrame to avoid modifying the original
+
+        X_transformed[self.column_name] = pd.to_datetime(X_transformed[self.column_name]) 
+        return X_transformed
+    
+class Onehot_transformer(BaseEstimator, TransformerMixin):
+    """
+    Transform a dataframe categorical feature to multiple features, similar to OneHotEncoder
+
+    Parameters:
+    -----------
+
+        df_: pd.DataFrame
+            Target pandas dataframe
+
+        column_name_: str
+            Feature name to be transformed
+
+    Returns:
+    -------
+
+        Return Dataframe with created features
+
+    """
+
+    def __init__(self, column_name):
+        self.column_name = column_name
+
+    def fit(self, X, y=None):
+        return self  # The fit method typically does nothing for transformers
+    
+    def transform(self, X):
+        X_transformed = X.copy()  # Copy the input DataFrame to avoid modifying the original
+
+        X_transformed = pd.get_dummies(X_transformed, columns = [self.column_name], dtype = int) 
+        return X_transformed

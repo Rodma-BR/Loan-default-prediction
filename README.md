@@ -19,25 +19,51 @@
 ## Resumen
 
 En este proyecto se implemetó modelo de regresión logística entrenado para la detección de incumplimiento de un préstamo, siendo este un problema de clasificación binaria. 
-Además de los parámetros del modelo, se tienen organizados y distribuidos los recursos para el análisis exploratorio (EDA), preprocesamiento, entrenamiento y 
-
----
-<span style="color:red"> *NOTE* </span>
-Nota
----
+Además de los parámetros del modelo, se tienen organizados y distribuidos los recursos para el análisis exploratorio (EDA), preprocesamiento y entrenamiento. Los detalle de cada sección se describen con detalle en este mismo texto.
 
 <a names= "EDA"></a>
 
 ## Análisis explotario de datos (EDA)
 
-Principales hallazgos
+En el análisis exploratorio se revisaron con cuidado los registros del conjunto de datos "definitely_not_from_kaggle_loan_default_dataset.csv". La principales tareas de análisis se pueden agrupar en la serie de pasos siguientes.
 
-- Es un problema binario con clases desbalanceadas (17% de clientes han fallado en los pagos)
-- Existen registros con más del 90% de valores nulos
-- Las variables tienen alta varianza
-- Existen familias de variables con varios tipos principales, algunas con métricas agregadas (min, max, mean, no agg). De estas familias se encuentra que la mayor es la relacionada al nombre "activity_pattern" con 104 variables similares.
-- Aproximadamente la mitad de las variables presentan un porcentaje mayor al 20% de valores nulos
-- Hay una alta incidencia de correlación entre las variables de las mismas familias. Donde para las variables con menos del 20% de valores nulos se tienen las siguientes incidencias entre variables con los mismos nombres base. 
+<ol>
+<li> Revisión de las características (Tipo de dato, nombres, similitudes) </li>
+<li> Revisión de la completez de las variables </li>
+<li> Revisión de completez de los registros </li>
+<li> Correlación entre las variables </li>
+</ol>
+
+También se revisan estadísticos sobre las variables, distribución de los datos, manejo de valores atípicos, entre otros procedimientos. En el notebook EDA.ipynb se encuentran la exploración más importante y se eliminó el código que no llevó a ningún descubrimiento relevante.
+
+---
+<span style="color:red"> *Nota:* </span> <br>
+  El conjunto de datos no cuenta con un diccionario por lo que se desconoce el origen y la importancia a priori de las variables a analizar. El conocimiento inicial permite un mejor estudio de las variables y la posibilidad de desarrollar nuevas variables por medio de ingeniería.
+
+---
+
+A continuación se describen los principales hallazgos encontrados en el análisis exploratorio
+
+*Insights*
+
+<ul>
+<li> <b>Clases: </b></li> Es un problema binario con clases desbalanceadas, la proporción es como sigue
+
+|Default| Porcentaje|
+|--|--|
+|1| 17%|
+|0| 83%|
+
+<li> <b>Registros nulos: </b></li> Existen registros con más del 90% de valores nulos, esto es un problema respecto a la calidad del dato. Se requiere un estudio más minucioso sobre este subcojunto.
+<li> <b>Familias de variables: </b> </li> Existen familias de variables con varios tipos principales, algunas con métricas agregadas (min, max, mean, no agg). De estas familias se encuentra que la mayor es la relacionada al nombre "activity_pattern" con 104 variables similares. 
+<h1 align="center">
+  <img src="./figs/similar_features.png" width = 600 alt="Openspark logo">
+  <br>
+</h1>
+<li> <b>Variables seudocontinuas</b> </li> Se encontró que un proporción considerable de variables supuestamente continuas tienen valores fijos y con una baja cantidad de únicos. Por ejemplo, "activity_pattern_09_last_9_months_max" que cuenta solo con 23 valores únicos.
+
+<li> Aproximadamente la mitad de las variables presentan un porcentaje mayor al 20% de valores nulos. </li>
+<li>  Hay una alta incidencia de correlación entre las variables de las mismas familias. Donde para las variables con menos del 20% de valores nulos se tienen las siguientes incidencias entre variables con los mismos nombres base.  </li>
 
 ```python
 {'mobility_pattern_work_': 5,
@@ -46,6 +72,7 @@ Principales hallazgos
  'social_mean_degree_last_': 3,
  'entropy_contacts_weekend_last_': 1}
 ```
+</ul>
 <a names= "features"></a>
 
 ## Main features
