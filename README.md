@@ -5,7 +5,7 @@
   <br>
 </h1>
 
-### Table of Contents  
+### Índice
 
 [Resumen](#Resumen) <br>
 [Análisis](#EDA) <br>
