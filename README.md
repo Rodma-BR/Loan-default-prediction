@@ -19,7 +19,7 @@
 ## Resumen
 
 En este proyecto se implemetó modelo de regresión logística entrenado para la detección de incumplimiento de un préstamo, siendo este un problema de clasificación binaria. 
-Además de los parámetros del modelo, se tienen organizados y distribuidos los recursos para el análisis exploratorio (EDA), preprocesamiento y entrenamiento. Los detalle de cada sección se describen con detalle en este mismo texto.
+Además de tener almacenado el modelo y las predicciones, se tienen organizados y distribuidos los recursos para el análisis exploratorio (EDA), preprocesamiento y entrenamiento. Los detalle de cada sección se describen con detalle en este mismo texto.
 
 La justificación de seleccionar la regresión logística es debido a su buen desempeño en clasificación binaria, en la interpretabilidad del modelo y en la capacidad de ajustar pesos sobre las clases en problemas desbalanceados, principalmente, incluso si existen otros modelos que tengan un mayor poder predictivo, en este estudio el enfoque es más a mostrar diferentes técnicas para mejorar el desempeño de un modelo que de obtener una buena métrica.
 
