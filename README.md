@@ -21,6 +21,8 @@
 En este proyecto se implemetó modelo de regresión logística entrenado para la detección de incumplimiento de un préstamo, siendo este un problema de clasificación binaria. 
 Además de los parámetros del modelo, se tienen organizados y distribuidos los recursos para el análisis exploratorio (EDA), preprocesamiento y entrenamiento. Los detalle de cada sección se describen con detalle en este mismo texto.
 
+La justificación de seleccionar la regresión logística es debido a su buen desempeño en clasificación binaria, en la interpretabilidad del modelo y en la capacidad de ajustar pesos sobre las clases en problemas desbalanceados, principalmente, incluso si existen otros modelos que tengan un mayor poder predictivo, en este estudio el enfoque es más a mostrar diferentes técnicas para mejorar el desempeño de un modelo que de obtener una buena métrica.
+
 <a names= "EDA"></a>
 
 ## Análisis explotario de datos (EDA)
@@ -183,6 +185,47 @@ Finalmente se preservan los conjuntos de datos limpios para la posterior impleme
 
 ## Modelación
 
+**Descripción matemática**
+
+Se implementó un modelo de regresión logística para la clasificación del incumplimiento de pago. La ecuación que rige el modelo es
+
+$$
+f(x) = \dfrac{1}{1 + e^{-(\beta_{0}+ \sum_{i=0}^{n}(\beta_{i}x_{i} )} }
+$$
+
+donde $\beta_{i}$ con $i=0,\ldots, n$ son los parámetros del modelo. Para encontrar el valor óptimo de estos parámetros se sigue un algoritmo de minimización aplicado, generalmente, a la función de pérdida dada por el error cuadrático medio. El algoritmo de minimización más común es el gradiente descendente que sigue la siguiente ecuación 
+
+$$
+f(x_{k+1}) = f(x_{k})+ \alpha_{k}*p_{k}
+$$
+
+donde $\alpha$ es el tamaño del paso y $p_{k}$ es la dirección de descenso en la iteración $k$. La dirección de descenso se asegura con el gradiente de la función.
+
+Para interpretar el resultado del modelo se puede escribir en otra forma 
+
+$$
+ln \left( \dfrac{p}{1-p}\right) =  \beta_{0}+ \sum_{i=0}^{n}(\beta_{i}x_{i} )
+$$
+
+donde $p$ denota la probabilidad de uno de los eventos binarios. El cociente entre las probabilidades de ambos eventos se conoce como momios y por la ecuación anterior se observa que la importancia de cada parámetro radica en su valor, es decir, entre más grande sea un parámetro comparado con los otros más contribuye a explicar los momios. Por ejemplo, suponga que existe un parámetro $\beta_{i}$ considerablemente mayor a los otros parámetros, esto significa que la variable asociada $x_{i}$ es la más importante en la modelación. Dicho esto, cabe aclarar que los signos de los parámetros también tienen significado, donde un valor positivo indica una contribución positiva a los momios.
+
+**Procedimiento**
+
+En el proceso de entrenamiento se realizó una tarea previa y una posterior, transformaciónes y evaluación, respectivamente. A continuación, se describen los 3 pasos
+
+<ul>
+<li> <b> Transformación: </b> </li> En este paso se realizó escalamiento y sobremuestreo. Estas transformaciones se realizaron posterior al preprocesamiento ya que además de ser opcionales, existen modelos que pueden perder desempeño al realizar estas transformaciones.
+<ul>
+<li> <b> Escalamiento: </b> </li> Al ser la regresión logística un modelo que mide distancia euclidiana, el escalamiento evita que alguna de las variables tenga demasiado peso en la modelación por el hecho de que sus valores son más grandes que los del resto del conjunto de datos. En este paso, se decidió utilizar escalamiento robusto ya que considera la transformación de los valores atípicos cambiando lo menos posible la distribución.
+<li> <b> Sobremuestreo: </b> </li>  Esta técnica se utiliza para generar registros similares a los reales para las clases en minoría. En este caso se puede utilizar para mejorar la clasificación de la clase con menos presencia (incumplimiento), sin embargo, suele afectar la clasificación de la otra clase. Dependiendo de la necesidad del negocio se puede utilizar esta técnica.
+</ul>
+<li> <b> Entrenamiento: </b> </li> El entrenamiento se realizó en conjunto con el algoritmo RFE (Recursive Feature Elimination) y el algoritmo GridSearchCV
+<ul>
+<li> <b> RFE: </b> </li>  El algoritmo RFE iterativamente agrega o quita variables en el entrenamiento buscando obtener las variables que maximizan el desempeño del modelo.
+<li> <b> GridSearchCV: </b> </li>  El algoritmo GridSearchCV se encarga de ejecutar múltiples variantes de los hiperpaŕametros del modelo entregando la mejor combinación de estos dado una métrica objetivo. A diferencia de otros algoritmos similares, este algoritmo revisa la malla ordenadamente.
+</ul>
+<li> <b> Evaluación: </b> </li> En la evaluación de un modelo de clasificación, se revisan las métricas tanto del conjunto de entrenamiento como de validación o prueba, según sea el caso. Las métricas que se ocuparon son las bien conocidas que se obtienen de la matriz de correlación como f1 score, accuracy, etc. Así como el área bajo la curva ROC
+</ul>
 
 [//]: <> (This is also a comment.)
 
@@ -190,6 +233,24 @@ Finalmente se preservan los conjuntos de datos limpios para la posterior impleme
 
 ## Resultados
 
-Mejora a la selección de variables correlacionadas
+En esta sección se muestra el desempeño del modelo tanto en el conjunto de entrenamiento como en el de validación.
 
+
+
+
+Se evalua el conjunto de muestras sin etiqueta y se guardan los datos en la ruta "data/test/classified_samples.csv", el modelo se persiste en formato pickle y se almacena en "models/log_reg.pkl"
+
+
+
+<a names= "Trabajo_futuro"></a>
+
+## Trabajo futuro
+
+Entre las principales mejoras para este trabajo serían
+
+<ul>
+<li> <b> Ingeniería de variables: </b> </li> Un estudio más detallado para tener una mejor comprensión de las variables y con estos poder hacer más ingeniería de características.
+<li> <b> Modelos: </b> </li> Con el fin de obtener un mejor desempeño, siempre es válido abordar el problema utilizando otro modelo que pueda ser más eficiente para producir una salida. Un buen candidato para clasificación que también cuenta con capacidad de balancear clases es el ensamble "RandomForest" o un alternativa más moderna es utilizar un algoritmo "XGBoost". Cabe resaltar que algunos modelos claramente más complejos conllevan un problema para la interpretación
+<li> <b> Modelos: </b> </li>
+</ul>
 
