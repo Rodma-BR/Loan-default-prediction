@@ -233,14 +233,67 @@ En el proceso de entrenamiento se realizó una tarea previa y una posterior, tra
 
 ## Resultados
 
-En esta sección se muestra el desempeño del modelo tanto en el conjunto de entrenamiento como en el de validación.
+En esta sección se muestra el desempeño del modelo tanto en el conjunto de entrenamiento como en el de validación. Como es de esperarse en los conjuntos con clases desbalanceadas, el modelo tiende a predecir mejor la clase dominante. El modelo se predice de manera similar el conjunto de entrenamiento y de prueba, sin embargo, el desempeño del modelo es austero (con posibles mejoras como se plantea en el trabajo a futuro).
 
+De nuevo enfatizando que en este trabajo no se buscó enfocarse únicamente en el desempeño, los resultados se describen a continuación
 
+<ul>
+<li> <b> Entrenamiento: </b> </li> Respecto al área bajo la curva ROC, el valor obtenido fue 0.71
 
+<h1 align="center">
+  <img src="./figs/ROC_train.png" width = 600 alt = "default_ts">
+  <br>
+</h1>
 
-Se evalua el conjunto de muestras sin etiqueta y se guardan los datos en la ruta "data/test/classified_samples.csv", el modelo se persiste en formato pickle y se almacena en "models/log_reg.pkl"
+Respecto a los errores en predicción para cada etiqueta, se tiene que la clase 1 (incumplimiento), se predice pobremente, mientras que la clase 0, tiene un mejor desempeño.
 
+<h1 align="center">
+  <img src="./figs/train_matrix.png" width = 600 alt = "default_ts">
+  <br>
+</h1>
 
+Las métricas comunes que se obtienen de la matriz de correlación son
+
+|Clase| Precision| Recall| f1-score|
+|--|--|--|--|
+|0 |0.91|0.62| 0.74|
+|1| 0.26| 0.69| 0.37|
+
+De estos resultados se observa que el modelo acierta al valor real de la clase 1 más veces de las que se equivoca, pero también clasifica como incumplidor a una cantidad considerable de clientes. Desde la perspectiva del negocio, probablemente es más deseable predecir correctamente los clientes con alta probabilidad de incumplimiento, así se tenga que negar el préstamo a algunos clientes. Por supuesto, este comportamiento se puede reducir mejorando las características del modelo o implementando un modelo que sea más apto para este conjunto.
+
+<li> <b> Validación: </b> </li> <ul> El conjunto de validación se comporta de manera similar al conjunto de prueba, por lo que el modelo no muestra sobreajuste. Respecto al área bajo la curva ROC, el valor obtenido fue 0.67
+
+<h1 align="center">
+  <img src="./figs/ROC_val.png" width = 600 alt = "default_ts">
+  <br>
+</h1>
+
+Respecto a los errores en predicción para cada etiqueta, se tiene que la clase 1 (incumplimiento), se predice pobremente, mientras que la clase 0, tiene un mejor desempeño.
+
+<h1 align="center">
+  <img src="./figs/val_matrix.png" width = 600 alt = "default_ts">
+  <br>
+</h1>
+
+Las métricas comunes que se obtienen de la matriz de correlación son
+
+|Clase| Precision| Recall| f1-score|
+|--|--|--|--|
+|0 |0.88|0.58| 0.70|
+|1| 0.27| 0.68| 0.39|
+</ul>
+
+El modelo predice de manera consistente al conjunto de entrenamiento, por lo que se espera que para el conjunto de prueba se tenga un desempeño similar.
+
+**Conjunto de prueba**
+
+Se evalua el conjunto de muestras sin etiqueta y se guardan los datos en la ruta "data/test/predicted_loan.csv", el modelo se persiste en formato pickle y se almacena en "models/log_reg.pkl"
+
+---
+> [!NOTE] 
+> Los registros con alta tasa de nulos no fueron evaluados y se separaron, estos se encuentran en la ruta "data/test/missing_predictions.csv"
+
+---
 
 <a names= "Trabajo_futuro"></a>
 
@@ -250,7 +303,7 @@ Entre las principales mejoras para este trabajo serían
 
 <ul>
 <li> <b> Ingeniería de variables: </b> </li> Un estudio más detallado para tener una mejor comprensión de las variables y con estos poder hacer más ingeniería de características.
-<li> <b> Modelos: </b> </li> Con el fin de obtener un mejor desempeño, siempre es válido abordar el problema utilizando otro modelo que pueda ser más eficiente para producir una salida. Un buen candidato para clasificación que también cuenta con capacidad de balancear clases es el ensamble "RandomForest" o un alternativa más moderna es utilizar un algoritmo "XGBoost". Cabe resaltar que algunos modelos claramente más complejos conllevan un problema para la interpretación
-<li> <b> Modelos: </b> </li>
+<li> <b> Transformaciones: </b> </li> Implementar y testear otro tipo de transformaciones sobre los datos que pudieran aportar en un desempeño al modelo. Por ejempĺo, otros algoritmos para sobremuestreo.
+<li> <b> Modelos: </b> </li> Con el fin de obtener un mejor desempeño, siempre es válido abordar el problema utilizando otro modelo que pueda ser más eficiente para producir una salida. Un buen candidato para clasificación que también cuenta con capacidad de balancear clases es el ensamble "RandomForest" o un alternativa más moderna es utilizar un algoritmo "XGBoost". Cabe resaltar que algunos modelos claramente más complejos conllevan un problema para la interpretación.
 </ul>
 
