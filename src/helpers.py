@@ -195,3 +195,35 @@ class Onehot_transformer(BaseEstimator, TransformerMixin):
 
         X_transformed = pd.get_dummies(X_transformed, columns = [self.column_name], dtype = int) 
         return X_transformed
+
+class Select_features(BaseEstimator, TransformerMixin):
+    """
+    Select custom features from a DataFrame
+
+    Parameters:
+    -----------
+
+        df_: pd.DataFrame
+            Target pandas dataframe
+
+        column_names_: list
+            Features list to be selected
+
+    Returns:
+    -------
+
+        Return Dataframe with selected features
+
+    """
+
+    def __init__(self, column_names_):
+        self.column_names_ = column_names_
+
+    def fit(self, X, y=None):
+        return self  # The fit method typically does nothing for transformers
+    
+    def transform(self, X):
+        X_transformed = X.copy()  # Copy the input DataFrame to avoid modifying the original
+
+        X_transformed = X_transformed[self.column_names_]
+        return X_transformed
